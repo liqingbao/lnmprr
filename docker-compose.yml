@@ -1,0 +1,73 @@
+version: '3.7'
+
+services:
+  nginx:
+    depends_on:
+      - php-fpm
+    image: nginx
+    container_name: nginx
+    volumes:
+      - ${APP_PATH}:/var/www
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "${HTTP_PORT}:80"
+      - "${HTTPS_PORT}:443"
+
+  php-fpm:
+    depends_on:
+      # php 连接mysql用这个名字替代localhost
+      - mysql
+      - redis
+    build:
+      context: ./php/
+    container_name: php-fpm
+    volumes:
+      - ${APP_PATH}:/var/www
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "9000"
+
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    container_name: mysql
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+      # - ./mysql/sql:/var/sql
+      # - ./mysql/lib:/var/lib
+      # data folder must be empty in the begin
+      - ${DATA_PATH}/mysql:/var/lib/mysql
+      - ${DATA_PATH}/logs/mysql:/var/log/mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: 123456
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    volumes:
+        - ${DATA_PATH}/redis:/data
+    ports:
+      - "${REDIS_PORT}:6379"
+
+  rabbitmq:
+    build:
+      context: ./rabbitmq
+    # image: rabbitmq
+    container_name: rabbitmq
+    ports:
+      # RABBITMQ_NODE_HOST_PORT
+      - "5672:5672"
+      # http host port
+      - "15672:15672"
+      # https host port
+      - "15671:15671"
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=123456
+      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.6
+    volumes:
+      - ${DATA_PATH}/rabbitmq:/var/lib/rabbitmq
+    depends_on:
+      - php-fpm

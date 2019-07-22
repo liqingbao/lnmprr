@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:fpm-stretch
 
 COPY ./etc/apt/sources.list /etc/apt/sources.list
 
@@ -63,6 +63,11 @@ RUN apt-get update \
     && docker-php-ext-install pdo pdo_mysql\
     # zip extension
     && pecl install zip \
+    # mongodb
+    && pecl install mongodb  \
+    && docker-php-ext-enable mongodb \
+    # pcntl
+    && docker-php-ext-install pcntl \
     # install composer
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
-    && composer config -g repo.packagist composer https://packagist.phpcomposer.com
+    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/

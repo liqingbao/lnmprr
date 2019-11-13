@@ -43,7 +43,7 @@ RUN apt-get update \
     && docker-php-ext-install imap \
     # IMAP
     # OPCACHE
-    # && docker-php-ext-install opcache \
+    && docker-php-ext-install opcache \
     # OPCACHE
     # xdebug
     && pecl install xdebug \
@@ -68,6 +68,9 @@ RUN apt-get update \
     && docker-php-ext-enable mongodb \
     # pcntl
     && docker-php-ext-install pcntl \
+    # swoole
+    && pecl install swoole \
+    && docker-php-ext-enable swoole \
     # install composer
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/

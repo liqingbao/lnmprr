@@ -4,7 +4,6 @@ services:
   nginx:
     depends_on:
       - php-fpm
-      - tomcat
     image: nginx
     container_name: nginx
     volumes:
@@ -81,22 +80,3 @@ services:
         - "${MONGODB_PORT}:27017"
       volumes:
         - ${DATA_PATH}/mongo:/data/db
-
-  tomcat:
-    depends_on:
-      - mysql
-      - redis
-    build:
-      context: ./tomcat
-    # image: tomcat:latest
-    container_name: tomcat
-    volumes:
-      - ${APP_PATH}:/var/www
-      - ./tomcat/conf/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
-      - ./tomcat/conf/server.xml:/usr/local/tomcat/conf/server.xml
-      - ./tomcat/webapps/host-manager/META-INF/content.xml:/usr/local/tomcat/webapps/host-manager/META-INF/content.xml
-      - ./tomcat/conf/Catalina:/usr/local/tomcat/conf/Catalina
-    ports:
-      - "8080"
-    extra_hosts:
-      - "spring.test:127.0.0.1"

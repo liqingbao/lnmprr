@@ -26,6 +26,7 @@ services:
       - ${APP_PATH}:/var/www
       - ./php/php.ini:/usr/local/etc/php/php.ini
     ports:
+      - "9501:9501"
       - "9000"
 
   mysql:

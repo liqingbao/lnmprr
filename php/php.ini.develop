@@ -1944,11 +1944,3 @@ ldap.max_links = -1
 ; Local Variables:
 ; tab-width: 4
 ; End:
-
-
-xdebug.remote_enable = On
-xdebug.remote_handler = dbgp
-xdebug.remote_host = host.docker.internal 
-xdebug.remote_port = 9001
-xdebug.remote_log = /var/log/php/xdebug.log
-xdebug.idekey = PHP-xdebug

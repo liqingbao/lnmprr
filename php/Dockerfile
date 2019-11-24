@@ -50,7 +50,7 @@ RUN apt-get update \
     && docker-php-ext-enable xdebug \
     # xdebug
     # redis
-    && pecl install redis \
+    && pecl install -o -f redis \
     # && docker-php-ext-enable redis \
     # extension=redis.so
     # redis
